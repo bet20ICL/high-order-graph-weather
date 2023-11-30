@@ -1,3 +1,4 @@
+"""Load downloaded ERA5 data"""
 import xarray as xr
 import zarr
 import numcodecs

@@ -1,3 +1,6 @@
 **__pycache__
 scratch.ipynb
+gnn_tutorial.ipynb
 log.md
+saved_models/**
+data/**

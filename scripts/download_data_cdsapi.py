@@ -1,3 +1,5 @@
+"""Download one timestep at a time"""
+
 import cdsapi
 import xarray as xr
 import zarr
