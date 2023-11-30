@@ -1,1 +1,2 @@
 from .models.graph_weather import GraphWeatherForecaster
+from .models.graph_conv import GraphConvolutionForecaster

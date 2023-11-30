@@ -9,10 +9,10 @@ and its immediate neighbors. There are residual connections between each round o
 """
 import torch
 
-from .graph_net_block import GraphProcessor
+from .conv_blocks import ConvProcessor
 
 
-class Processor(torch.nn.Module):
+class GCNProcessor(torch.nn.Module):
     """Processor for latent graph"""
 
     def __init__(
@@ -45,7 +45,7 @@ class Processor(torch.nn.Module):
         # Take features from encoder and put into processor graph
         self.input_dim = input_dim
 
-        self.graph_processor = GraphProcessor(
+        self.graph_processor = ConvProcessor(
             num_blocks,
             input_dim,
             edge_dim,

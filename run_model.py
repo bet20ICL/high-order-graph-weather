@@ -7,21 +7,37 @@ from torch.utils.data import DataLoader, Dataset
 import torch.optim as optim
 
 from high_order_graph_weather.models.losses import NormalizedMSELoss
-from high_order_graph_weather import GraphWeatherForecaster
-from .constants import constants
+from high_order_graph_weather import GraphConvolutionForecaster, GraphWeatherForecaster
+import scripts.constants as constsants
 
-data_path = f"{constants.DATASET_PATH}/global/2022_01.nc"
-class ToyERA5Dataset(Dataset):
-    def __init__(self, data_path) -> None:
-        super().__init__()
-        data = xr.open_dataset(data_path)
-        self.lat_lons = np.array(np.meshgrid(data.latitude.values, data.longitude.values)).T.reshape(-1, 2)
-        self.dataset 
+# data_path = f"{constants.DATASET_PATH}/global/2022_01.nc"
+# class ToyERA5Dataset(Dataset):
+#     def __init__(self, data_path) -> None:
+#         super().__init__()
+#         data = xr.open_dataset(data_path)
+#         self.lat_lons = np.array(np.meshgrid(data.latitude.values, data.longitude.values)).T.reshape(-1, 2)
+#         self.dataset 
         
-    def __len__(self):
-        return self.dataset.shape[0] - 1
+#     def __len__(self):
+#         return self.dataset.shape[0] - 1
         
-dataset = ToyERA5Dataset(data_path)
+# dataset = ToyERA5Dataset(data_path)
+
+lat_lons = []
+for lat in range(-90, 90, 1):
+    for lon in range(0, 360, 1):
+        lat_lons.append((lat, lon))
+model = GraphConvolutionForecaster(lat_lons)
+
+features = torch.randn((2, len(lat_lons), 78))
+
+out = model(features)
+criterion = NormalizedMSELoss(lat_lons=lat_lons, feature_variance=torch.randn((78,)))
+loss = criterion(out, features)
+loss.backward()
+
+print("Done!")
+
 # model = GraphWeatherForecaster(lat_lons)
 # criterion = NormalizedMSELoss(lat_lons=lat_lons, feature_variance=torch.randn((78,)))
 # optimizer = optim.AdamW(model.parameters(), lr=0.001)
